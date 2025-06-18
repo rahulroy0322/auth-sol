@@ -1,0 +1,36 @@
+/* eslint-disable no-magic-numbers */
+import Joi from 'joi';
+
+import type {
+  PermissionType,
+  PermissionValueType,
+} from '../@types/permission.types';
+import { ROLES } from '../config/role.config';
+
+const users = Joi.number().min(1).max(100);
+const roles = Joi.array().items(Joi.string().valid(...ROLES));
+
+const permissionValueSchema = Joi.alternatives<boolean | PermissionValueType[]>(
+  Joi.bool(),
+  Joi.array().items(
+    Joi.alternatives(
+      Joi.object({
+        users: users.optional(),
+        roles: roles.optional(),
+      }),
+      Joi.object({
+        users: users.required(),
+        roles: roles.required(),
+      })
+    )
+  )
+).messages({
+  'alternatives.types': `Value must be a boolean or an array of objects with "role" as ${ROLES.join(',')} array and "users" as number (1,100)`,
+});
+
+const permissionSchema = Joi.object<PermissionType>({
+  name: Joi.string().trim().required(),
+  value: permissionValueSchema.required(),
+});
+
+export { permissionValueSchema, permissionSchema };

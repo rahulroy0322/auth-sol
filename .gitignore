@@ -134,3 +134,18 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# lock files
+*lock*
+
+# output files
+lib
+dist
+build
+bin
+
+# extra files
+pnpm*
+yarn*
+.vscode*
