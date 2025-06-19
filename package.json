@@ -5,19 +5,21 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc -b",
+    "commitlint": "commitlint --edit",
     "dev": "DEBUG=APP:* tsx --watch src/main.ts",
     "formate": "prettier ./{src,tests}/**/* --check",
     "formate:fix": "prettier ./{src,tests}/**/* -w",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
     "prepare": "husky",
-    "start": "node dist/main.js"
+    "start": "ENV=prod node dist/main.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "core": "^1.0.113",
     "cors": "^2.8.5",
     "debug": "^4.4.1",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "joi": "^17.13.3",
     "mongoose": "^8.15.2"
@@ -42,6 +44,15 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.28.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier -w",
+      "eslint --fix"
+    ],
+    "*.json": [
+      "prettier -w"
+    ]
   },
   "keywords": [
     "auth",

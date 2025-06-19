@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 
+import { PermissionType } from '../@types/permission.types';
 import {
   AlreadyExistError,
   NotFoundError,
@@ -19,7 +20,6 @@ import {
   updatePermissionById,
 } from '../services/permission.services';
 import { created, ok } from '../status/main';
-import { PermissionType } from '../@types/permission.types';
 
 const createPermissionController: RequestHandler = asyncHandler(
   async (req, res) => {

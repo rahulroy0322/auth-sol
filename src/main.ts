@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 
 import app from './app';
-import { PORT } from './config/app.config';
+import { DbUrl, PORT } from './config/app.config';
 import { debug } from './debug';
 
 const server = app.listen(PORT, () => {
@@ -21,7 +22,7 @@ const close = async () => {
 };
 
 mongoose
-  .connect('mongodb://localhost:27017/auth-sol')
+  .connect(DbUrl)
   .then(() => {
     debug('Database connected');
   })

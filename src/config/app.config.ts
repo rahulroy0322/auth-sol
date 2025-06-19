@@ -1,3 +1,3 @@
-const PORT = 8000;
+import { MONGOURI as DbUrl, PORT, isProd } from './env.config';
 
-export { PORT };
+export { PORT, isProd, DbUrl };
