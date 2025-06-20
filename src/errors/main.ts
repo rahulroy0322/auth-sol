@@ -3,8 +3,10 @@ import {
   _max,
   alreadyExist,
   badRequest,
+  forbidden,
   notFound,
   serverError,
+  unauthorized,
 } from '../status/main';
 
 class AppError extends Error {
@@ -22,6 +24,18 @@ class AppError extends Error {
 class NotFoundError extends AppError {
   constructor(message: string = 'route not found') {
     super(notFound, message);
+  }
+}
+
+class UnauthorizedError extends AppError {
+  constructor(message: string) {
+    super(unauthorized, message);
+  }
+}
+
+class ForbiddenError extends AppError {
+  constructor(message: string) {
+    super(forbidden, message);
   }
 }
 
@@ -44,4 +58,12 @@ class ServerError extends AppError {
   }
 }
 
-export { AppError, NotFoundError, ServerError, ValueError, AlreadyExistError };
+export {
+  AppError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ServerError,
+  ValueError,
+  AlreadyExistError,
+};

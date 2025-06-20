@@ -1,6 +1,5 @@
 import type { RequestHandler } from 'express';
 
-import { PermissionType } from '../@types/permission.types';
 import {
   AlreadyExistError,
   NotFoundError,
@@ -10,7 +9,7 @@ import {
 import { asyncHandler } from '../middlewares/async.handler';
 import {
   permissionSchema,
-  permissionValueSchema,
+  permissionUpdateSchema,
 } from '../schema/permission.schema';
 import {
   createPermission,
@@ -95,36 +94,24 @@ const updatePermissionByIdController: RequestHandler = asyncHandler(
   async (req, res) => {
     const id = req.params.id!;
 
-    const { name, value } = req.body;
+    const { value, error } = permissionUpdateSchema.validate(req.body, {
+      abortEarly: false,
+      allowUnknown: false,
+      stripUnknown: true,
+    });
 
-    if (!name && (value === undefined || value === null)) {
+    if (error) {
+      throw new ValueError(
+        error.details.map((detail) => detail.message).join(',')
+      );
+    }
+
+    if (!value) {
       throw new ValueError('please peovide something to update!');
     }
 
-    const data = {} as Partial<PermissionType>;
-
-    if (value) {
-      const { error, value: _data } = permissionValueSchema.validate(value, {
-        abortEarly: false,
-        allowUnknown: false,
-        stripUnknown: true,
-      });
-
-      if (error) {
-        throw new ValueError(
-          error.details.map((detail) => detail.message).join(',')
-        );
-      }
-
-      data.value = _data;
-    }
-
-    if (name) {
-      data.name = name;
-    }
-
     // TODO
-    const permission = await updatePermissionById(id, data);
+    const permission = await updatePermissionById(id, value);
 
     if (!permission) {
       throw new NotFoundError('No perssion found!');

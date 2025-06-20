@@ -11,6 +11,7 @@ const envSchema = Joi.object<ProcessType>({
   // eslint-disable-next-line no-magic-numbers
   PORT: Joi.number().default(8000),
   MONGOURI: Joi.string().required(),
+  JWT_SECRET: Joi.string().required(),
 });
 
 export { envSchema };

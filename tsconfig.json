@@ -3,6 +3,7 @@
     "target": "ES6",
     "module": "commonjs",
     "rootDir": "./src",
+    "lib": ["ES2021"],
     "resolveJsonModule": true,
     "declaration": true,
     "sourceMap": true,
@@ -22,6 +23,6 @@
     "noImplicitOverride": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/exress.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

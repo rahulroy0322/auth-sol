@@ -19,8 +19,8 @@ if (warning) {
   console.warn(warning);
 }
 
-const { ENV, MONGOURI, PORT } = value as ProcessType;
+const { ENV, MONGOURI, PORT, JWT_SECRET } = value as ProcessType;
 
-const isProd = ENV === 'prod';
+const isDev = ENV === 'dev';
 
-export { isProd, ENV, MONGOURI, PORT };
+export { isDev, ENV, MONGOURI, PORT, JWT_SECRET };

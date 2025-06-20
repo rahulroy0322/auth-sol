@@ -15,7 +15,7 @@ const UserSchema = new Schema<UserType>(
       unique: true,
       require: true,
     },
-    pass: {
+    passwd: {
       type: String,
       select: false,
       require: true,

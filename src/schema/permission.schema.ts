@@ -28,9 +28,15 @@ const permissionValueSchema = Joi.alternatives<boolean | PermissionValueType[]>(
   'alternatives.types': `Value must be a boolean or an array of objects with "role" as ${ROLES.join(',')} array and "users" as number (1,100)`,
 });
 
+const nameSchema = Joi.string().trim();
 const permissionSchema = Joi.object<PermissionType>({
-  name: Joi.string().trim().required(),
+  name: nameSchema.required(),
   value: permissionValueSchema.required(),
 });
 
-export { permissionValueSchema, permissionSchema };
+const permissionUpdateSchema = Joi.object<PermissionType>({
+  name: nameSchema,
+  value: permissionValueSchema.required(),
+});
+
+export { permissionSchema, permissionUpdateSchema };

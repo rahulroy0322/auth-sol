@@ -1,11 +1,8 @@
 import type { PermissionType } from '../@types/permission.types';
+import type { Pritify } from '../@types/utils.types';
 import { Permission } from '../models/permission.model';
 
-type Prittify<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K];
-} & {};
-
-type _PermissionType = Prittify<
+type _PermissionType = Pritify<
   {
     _id: string;
   } & PermissionType

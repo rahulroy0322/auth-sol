@@ -3,7 +3,9 @@ const _continue = 100;
 const ok = 200;
 const created = 201;
 
-const badRequest = 404;
+const badRequest = 400;
+const unauthorized = 401;
+const forbidden = 403;
 const notFound = 404;
 const alreadyExist = 409;
 
@@ -21,6 +23,8 @@ export {
 
   // 4**
   badRequest,
+  unauthorized,
+  forbidden,
   notFound,
   alreadyExist,
 

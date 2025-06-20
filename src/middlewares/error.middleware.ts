@@ -1,9 +1,8 @@
 import type { ErrorRequestHandler } from 'express';
 
+import { isDev } from '../config/env.config';
 import { AppError } from '../errors/main';
 import { serverError } from '../status/main';
-
-const isDev = true;
 
 const formatErrorData = (e: Error) => {
   const data: Error & {

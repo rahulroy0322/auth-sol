@@ -6,17 +6,30 @@ import {
   getPermissionByIdController,
   updatePermissionByIdController,
 } from '../controllers/permission.controller';
+import { authenticate, roleAuthenticate } from '../middlewares/auth.middleware';
 
 const permissionRouter: Router = Router();
 
 permissionRouter
   .route('/')
-  .get(getAllPermissionController)
-  .post(createPermissionController);
+  .get(
+    authenticate,
+    roleAuthenticate(['admin', 'super']),
+    getAllPermissionController
+  )
+  .post(
+    authenticate,
+    roleAuthenticate(['admin', 'super']),
+    createPermissionController
+  );
 
 permissionRouter
   .route('/:id')
-  .get(getPermissionByIdController)
-  .patch(updatePermissionByIdController);
+  .get(authenticate, getPermissionByIdController)
+  .patch(
+    authenticate,
+    roleAuthenticate(['admin', 'super']),
+    updatePermissionByIdController
+  );
 
 export { permissionRouter };
