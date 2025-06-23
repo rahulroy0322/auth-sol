@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 
+import { debug } from '../debug';
 import {
   AlreadyExistError,
   NotFoundError,
@@ -8,10 +9,12 @@ import {
 } from '../errors/main';
 import { asyncHandler } from '../middlewares/async.handler';
 import {
+  permissionNameSchema,
   permissionSchema,
   permissionUpdateSchema,
 } from '../schema/permission.schema';
 import {
+  checkPermission,
   createPermission,
   getAllPermission,
   getPermissionById,
@@ -124,9 +127,48 @@ const updatePermissionByIdController: RequestHandler = asyncHandler(
   }
 );
 
+const checkPermissionController: RequestHandler = asyncHandler(
+  async (req, res) => {
+    const name = req.params?.name || req.body?.name;
+    const user = req.user;
+
+    if (!user) {
+      debug('ERROR!: ', 'user is empty this should not called');
+      throw new ServerError();
+    }
+
+    const { value, error } = permissionNameSchema.validate(name, {
+      abortEarly: false,
+      allowUnknown: false,
+      stripUnknown: true,
+    });
+
+    if (error) {
+      throw new ValueError(
+        error.details.map((detail) => detail.message).join(',')
+      );
+    }
+
+    // TODO
+    const permission = await getPermissionByName(value);
+
+    if (!permission) {
+      throw new NotFoundError('No perssion found!');
+    }
+
+    res.status(ok).json({
+      success: true,
+      data: {
+        access: checkPermission(permission, user),
+      },
+    });
+  }
+);
+
 export {
   createPermissionController,
   getAllPermissionController,
   getPermissionByIdController,
   updatePermissionByIdController,
+  checkPermissionController,
 };

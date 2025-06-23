@@ -39,4 +39,14 @@ const permissionUpdateSchema = Joi.object<PermissionType>({
   value: permissionValueSchema.required(),
 });
 
-export { permissionSchema, permissionUpdateSchema };
+const permissionNameSchema = nameSchema.required().messages({
+  'string.empty': 'Name is required',
+  'any.required': 'Name is required',
+});
+
+export {
+  permissionNameSchema,
+  permissionValueSchema,
+  permissionSchema,
+  permissionUpdateSchema,
+};

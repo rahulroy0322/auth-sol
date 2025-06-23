@@ -1,6 +1,8 @@
 import { compare } from 'bcrypt';
 import type { RequestHandler } from 'express';
 
+import { REFRESH_KEY } from '../config/cookie.config';
+import { debug } from '../debug';
 import {
   AlreadyExistError,
   NotFoundError,
@@ -10,10 +12,12 @@ import {
 } from '../errors/main';
 import { asyncHandler } from '../middlewares/async.handler';
 import { loginSchema, registerSchema } from '../schema/auth.schema';
-import { hashData } from '../services/auth.services';
+import { hashData, verifyToken } from '../services/auth.services';
+import { cookieRes } from '../services/cookie.services';
 import {
   createUser,
   getUserByEmail,
+  getUserById,
   getUserByUname,
 } from '../services/user.services';
 import { created, ok } from '../status/main';
@@ -58,10 +62,7 @@ const registerController: RequestHandler = asyncHandler(async (req, res) => {
   }
 
   // todo
-  res.status(created).json({
-    success: true,
-    data: user,
-  });
+  cookieRes(res, user, created);
 });
 
 const loginController: RequestHandler = asyncHandler(async (req, res) => {
@@ -89,10 +90,40 @@ const loginController: RequestHandler = asyncHandler(async (req, res) => {
   }
 
   // TODO
-  res.status(ok).json({
-    success: true,
-    data: user,
-  });
+  cookieRes(res, user, ok);
 });
 
-export { registerController, loginController };
+const refreshTokenController: RequestHandler = asyncHandler(
+  async (req, res) => {
+    const [, token] = (req.cookies[REFRESH_KEY] || '').split(' ');
+
+    if (!token) {
+      throw new UnauthorizedError('please login first!');
+    }
+
+    const { error, data } = verifyToken(token);
+
+    if (error) {
+      debug('ERROR!: ', error);
+      throw new UnauthorizedError('please login first!');
+    }
+
+    if (!data) {
+      debug('WARN!: ', 'data is empty this should not called');
+      throw new ServerError();
+    }
+
+    // TODO
+    const user = await getUserById(data._id);
+
+    if (!user) {
+      debug('ERROR!: ', 'user is empty this should not called');
+      throw new ServerError();
+    }
+
+    // TODO
+    cookieRes(res, user, ok);
+  }
+);
+
+export { registerController, loginController, refreshTokenController };

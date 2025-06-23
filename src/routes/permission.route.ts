@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+  checkPermissionController,
   createPermissionController,
   getAllPermissionController,
   getPermissionByIdController,
@@ -22,6 +23,10 @@ permissionRouter
     roleAuthenticate(['admin', 'super']),
     createPermissionController
   );
+
+permissionRouter
+  .get('/access', authenticate, checkPermissionController)
+  .get('/access/:name', authenticate, checkPermissionController);
 
 permissionRouter
   .route('/:id')

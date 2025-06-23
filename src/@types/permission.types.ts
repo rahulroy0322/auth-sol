@@ -1,7 +1,7 @@
 import type { RoleType } from '../config/role.config';
 
 type PermissionValueType = {
-  role: RoleType[];
+  roles: RoleType[];
   users: number;
 };
 
